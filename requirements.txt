@@ -5,3 +5,4 @@ scipy # probability theories
 jinja2 # rendering dataframes to latex
 ipykernel # running iypnb files locally
 pathpy2
+unittests
