@@ -1,5 +1,5 @@
 import unittest
-from causalpathalgorithms import PaCo, PaCo2
+from causalpathalgorithms import PaCo, PaCo2, pathpy2_causal_paths, pathpy3_causal_paths
 from utils import read_time_stamped_csv
 
 
@@ -29,6 +29,18 @@ class TestPaco(unittest.TestCase):
 
     def test_paco_2_on_example(self):
         result = PaCo2(self.test_edges, 2, 2)
+        self.assertDictEqual(
+            result, self.expected_test_csv_result, f"Test results of PaCo don't match "
+        )
+
+    # def test_pathpy2_on_example(self):
+    #     result = pathpy2_causal_paths(self.test_edges, 2, 2)
+    #     self.assertDictEqual(
+    #         result, self.expected_test_csv_result, f"Test results of PaCo don't match "
+    #     )
+
+    def test_pathpy3_on_example(self):
+        result = pathpy3_causal_paths(self.test_edges, 2, 2)
         self.assertDictEqual(
             result, self.expected_test_csv_result, f"Test results of PaCo don't match "
         )
