@@ -6,17 +6,20 @@ from pathpy.Log import Log, Severity
 def PaCo(sorted_edges, delta_time, max_path_length, verbose=False):
     counts = dict()
     window = list()
-    for source, target, time in sorted_edges:
+    for idx, (source, target, time) in enumerate(sorted_edges):
         time = time["Timestamp"]
         current_counts = dict()
         current_counts[(source, target)] = 1
-
         # remove items from the window that are too old (from looking at delta_time)
+        old_len = len(window)
         window = [
             (source_window, target_window, time_window, dict_window)
             for source_window, target_window, time_window, dict_window in window
             if time_window >= time - delta_time
         ]
+        new_len = len(window)
+        if verbose and old_len - new_len > 0:
+            print(f"Removed {old_len - new_len} items from window, new size {new_len}")
         for source_window, target_window, time_window, counts_window in window:
             # skip if edge in window doesn't connect or is not formed after time
             if target_window != source or time <= time_window:
