@@ -1,8 +1,8 @@
 import time
-import causalpathalgorithms
 import sys
 import pandas as pd
 import utils
+import config
 
 
 def compare_runtime(
@@ -67,24 +67,19 @@ def exp_runtime(dataset_sorted_edges, algorithms, progress_file, verbose=False):
 
 
 def main():
-    datasets = ["data/college-msg.csv", "data/reality-mining.csv"]
-    algorithms = [
-        ("PaCo", causalpathalgorithms.PaCo),
-        ("PaCo2", causalpathalgorithms.PaCo2),
-        ("PathPy", causalpathalgorithms.pathpy_causal_paths),
-        ("PathPy2", causalpathalgorithms.pathpy2_causal_paths),
-    ]
     selected_algorithms = [
-        algorithms[int(sys.argv[i])] for i in range(2, len(sys.argv))
+        config.algorithms[int(sys.argv[i])] for i in range(2, len(sys.argv))
     ]
     algorithms_string = "_".join([alg[0] for alg in selected_algorithms])
-    progress_file_name = f"results/{algorithms_string}_{sys.argv[1]}.progress.csv"
-    results_file_name = f"results/{algorithms_string}_{sys.argv[1]}.csv"
+    progress_file_name = (
+        f"{config.results_dir}/{algorithms_string}_{sys.argv[1]}.progress.csv"
+    )
+    results_file_name = f"{config.results_dir}/{algorithms_string}_{sys.argv[1]}.csv"
     print(f"testing {algorithms_string}")
     print(f"will save progress to {progress_file_name}")
     print(f"will save final results to {results_file_name}")
 
-    G, edges = utils.read_time_stamped_csv(datasets[int(sys.argv[1])])
+    _, edges = utils.read_time_stamped_csv(config.datasets[int(sys.argv[1])])
 
     results = exp_runtime(edges, selected_algorithms, progress_file_name)
     pd.DataFrame(results).to_csv(results_file_name, index=False)
