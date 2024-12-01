@@ -7,22 +7,10 @@ import pathpy3 as pp3
 def PaCo(sorted_edges, delta_time, max_path_length, verbose=False):
     counts = {}
     window = []
-    seen_window_sizes = []
     for idx, (source, target, time) in enumerate(sorted_edges):
         time = time["Timestamp"]
         current_counts = dict()
         current_counts[(source, target)] = 1
-        # remove items from the window that are too old (from looking at delta_time)
-        old_len = len(window)
-        window = [
-            (source_window, target_window, time_window, dict_window)
-            for source_window, target_window, time_window, dict_window in window
-            if time_window >= time - delta_time
-        ]
-        new_len = len(window)
-        if verbose and old_len - new_len > 0:
-            print(f"Removed {old_len - new_len} items from window, new size {new_len}")
-        seen_window_sizes.append(new_len)
 
         out_of_scope_count = 0
         for source_window, target_window, time_window, counts_window in window:
@@ -44,6 +32,7 @@ def PaCo(sorted_edges, delta_time, max_path_length, verbose=False):
                 current_counts[combined_path] = (
                     current_counts.get(combined_path, 0) + counts_window[path]
                 )
+        # remove items from the window that are too old (from looking at delta_time)
         if out_of_scope_count > 0:
             del window[:out_of_scope_count]
 
@@ -56,7 +45,7 @@ def PaCo(sorted_edges, delta_time, max_path_length, verbose=False):
 
         # Increment window
         window.append((source, target, time, current_counts))
-    return counts, seen_window_sizes
+    return counts
 
 
 def PaCo2(
@@ -109,9 +98,6 @@ def pathpy_causal_paths(
     max_path_length: int,
     verbose=False,
 ):
-    if not verbose:
-        pp1.Log.Log.setMinSeverity(pp1.Log.Severity.ERROR)
-
     temporal_network = pp1.TemporalNetwork()
     for source, target, time in sorted_edges:
         time = time["Timestamp"]

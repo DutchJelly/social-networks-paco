@@ -1,6 +1,7 @@
 import networkx as nx
 from typing import Iterable, Literal
 import pandas as pd
+import time
 
 
 def read_time_stamped_csv(
