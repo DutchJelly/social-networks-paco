@@ -108,6 +108,8 @@ def paths_from_dag(
     else:
         ONE_TO_MANY = False
 
+    print("is one to many", ONE_TO_MANY)
+
     if dag.is_acyclic is None:
         dag.topsort()
     # issue error if graph contains cycles
@@ -127,12 +129,18 @@ def paths_from_dag(
         # construct all paths originating from root nodes for 1 to 1
         if not ONE_TO_MANY:
             for s in dag.roots:
-                extracted_paths = dag.routes_from_node(s, node_mapping)
+                extracted_paths = dag.routes_from_node(
+                    s, node_mapping, max_path_length=max_subpath_length
+                )
                 if unique:
                     extracted_paths = set(tuple(x) for x in extracted_paths)
                 for path in extracted_paths:  # add detected paths to paths object
                     if repetitions:
-                        p.add_path(path, expand_subpaths=False, frequency=(0, 1))
+                        p.add_path(
+                            path,
+                            expand_subpaths=False,
+                            frequency=(0, 1),
+                        )
                     else:
                         p.add_path(
                             remove_repetitions(path),
@@ -142,13 +150,21 @@ def paths_from_dag(
         else:
             path_counter = defaultdict(lambda: 0)
             for root in dag.roots:
-                for set_path in dag.routes_from_node(root, node_mapping):
+                for set_path in dag.routes_from_node(
+                    root, node_mapping, max_path_length=max_subpath_length
+                ):
                     for blown_up_path in expand_set_paths(set_path):
+                        # if len(blown_up_path) >= max_subpath_length:
+                        #     continue
                         path_counter[blown_up_path] += 1
 
             for path, count in path_counter.items():
                 if repetitions:
-                    p.add_path(path, expand_subpaths=False, frequency=(0, count))
+                    p.add_path(
+                        path,
+                        expand_subpaths=False,
+                        frequency=(0, count),
+                    )
                 else:
                     p.add_path(
                         remove_repetitions(path),

@@ -176,7 +176,9 @@ class DAG(Network):
                 Severity.WARNING,
             )
 
-    def routes_from_node(self, v, node_mapping=None):
+    def routes_from_node(
+        self, v, node_mapping=None, max_path_length=2, recursive=False
+    ):
         """
         Constructs all paths from node v to any leaf nodes
 
@@ -199,6 +201,8 @@ class DAG(Network):
 
         # set of unprocessed nodes
         queue = {v}
+        visited_nodes = []
+        print("looking from " + v)
 
         while queue:
             # take one unprocessed node
@@ -208,10 +212,16 @@ class DAG(Network):
             # paths, currently ending in x
             if self.successors[x]:
                 for w in self.successors[x]:
+                    is_visited = w in visited_nodes
+                    if not is_visited:
+                        visited_nodes.append(w)
                     for p in temp_paths[x]:
-                        temp_paths[w].append(p + [w])
+                        if len(p) < max_path_length + 1:
+                            temp_paths[w].append(p + [w])
+                        if not is_visited:
+                            temp_paths[w].append([w])
+
                     queue.add(w)
-                del temp_paths[x]
 
         # flatten list
         final_paths = []

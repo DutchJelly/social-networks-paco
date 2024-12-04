@@ -33,11 +33,12 @@ class TestPaco(unittest.TestCase):
             result, self.expected_test_csv_result, f"Test results of PaCo don't match "
         )
 
-    # def test_pathpy2_on_example(self):
-    #     result = pathpy2_causal_paths(self.test_edges, 2, 2)
-    #     self.assertDictEqual(
-    #         result, self.expected_test_csv_result, f"Test results of PaCo don't match "
-    #     )
+    def test_pathpy2_on_example(self):
+        result = pathpy2_causal_paths(self.test_edges, 2, 2)
+
+        self.assertDictEqual(
+            result, self.expected_test_csv_result, f"Test results of PaCo don't match "
+        )
 
     # def test_pathpy3_on_example(self):
     #     result = pathpy3_causal_paths(self.test_edges, 2, 2)
