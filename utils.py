@@ -2,6 +2,9 @@ import networkx as nx
 from typing import Iterable, Literal
 import pandas as pd
 import time
+import signal
+from contextlib import contextmanager
+import numpy as np
 
 
 def read_time_stamped_csv(
@@ -28,3 +31,29 @@ def read_time_stamped_csv(
         G = G.to_directed()
 
     return (G, sorted(G.edges(data=True), key=lambda x: x[2][timestamp_column]))
+
+
+def get_average_timestep(dataset_sorted_edges):
+    return np.diff(
+        np.array(
+            [int(time_dict["Timestamp"]) for _, _, time_dict in dataset_sorted_edges]
+        )
+    ).mean()
+
+
+class TimeoutException(Exception):
+    pass
+
+
+@contextmanager
+def timeout(seconds: int):
+    def handler(signum, frame):
+        raise TimeoutException()
+
+    signal.signal(signal.SIGALRM, handler)
+    signal.alarm(seconds)
+
+    try:
+        yield
+    finally:
+        signal.alarm(0)

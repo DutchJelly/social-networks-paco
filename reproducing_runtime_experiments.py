@@ -3,7 +3,6 @@ import sys
 import pandas as pd
 import utils
 import config
-import numpy as np
 
 
 def compare_runtime(
@@ -21,39 +20,26 @@ def compare_runtime(
 
 
 def exp_runtime(dataset_sorted_edges, algorithms, progress_file, verbose=False):
-    edge_list_size_step = len(dataset_sorted_edges) / 10
-    reality_mining_avg_time_step = 16.704334086681733  # computed in window_sizes.ipynb
-    dataset_avg_time_step = np.diff(
-        np.array(
-            [int(time_dict["Timestamp"]) for _, _, time_dict in dataset_sorted_edges]
-        )
-    ).mean()
-    print("dataset average time step: " + str(dataset_avg_time_step))
-
-    dt_list = list(range(10, 121, 10))
-
+    edge_list_size_step = int(len(dataset_sorted_edges) / 5)
     # dictionary containing parameter keys and the values that we want to test. Each value is a tuple containing
     # the readable format and the real parameter
     alg_parameter_ranges = {
-        "max_path_length": range(1, 15),
-        "sorted_edges": list(
-            range(
-                edge_list_size_step,
-                len(dataset_sorted_edges),
-                edge_list_size_step,
-            )
-        )
-        + [len(dataset_sorted_edges)],
-        "delta_time": [dt / reality_mining_avg_time_step for dt in dt_list],
+        "max_path_length": range(1, 7),
+        "sorted_edges": range(
+            edge_list_size_step,
+            len(dataset_sorted_edges) + 1,
+            edge_list_size_step,
+        ),
+        "delta_time": range(10, 51, 10),
     }
     alg_parameter_defaults = {
         "sorted_edges": len(dataset_sorted_edges),
-        "delta_time": 30 / reality_mining_avg_time_step,
+        "delta_time": 30,
         "max_path_length": 4,
     }
     parameter_preprocessors = {
         "sorted_edges": lambda n: dataset_sorted_edges[:n],
-        "delta_time": lambda m: int(m * 60 * dataset_avg_time_step),
+        "delta_time": lambda m: m * 60,
     }
 
     results = []
@@ -86,16 +72,14 @@ def main():
     ]
     algorithms_string = "_".join([alg[0] for alg in selected_algorithms])
     progress_file_name = (
-        f"dtw_{config.results_dir}/{algorithms_string}_{sys.argv[1]}.progress.csv"
+        f"reproducing_results/{algorithms_string}_{sys.argv[1]}.progress.csv"
     )
-    results_file_name = (
-        f"dtw_{config.results_dir}/{algorithms_string}_{sys.argv[1]}.csv"
-    )
+    results_file_name = f"reproducing_results/{algorithms_string}_{sys.argv[1]}.csv"
     print(f"testing {algorithms_string}")
     print(f"will save progress to {progress_file_name}")
     print(f"will save final results to {results_file_name}")
 
-    _, edges = utils.read_time_stamped_csv(config.datasets[int(sys.argv[1])])
+    _, edges = utils.read_time_stamped_csv(**config.datasets[int(sys.argv[1])])
 
     results = exp_runtime(edges, selected_algorithms, progress_file_name)
     pd.DataFrame(results).to_csv(results_file_name, index=False)

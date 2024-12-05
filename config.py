@@ -12,4 +12,5 @@ algorithms = [
     ("PathPy2", causalpathalgorithms.pathpy2_causal_paths),
 ]
 
-results_dir = "results"
+# average time step in reality mining dataset, which is used as reference
+reference_avg_time_step = 16.704334086681733
