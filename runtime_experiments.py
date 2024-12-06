@@ -45,8 +45,9 @@ def run_runtime_experiment(
     timeout,
     verbose=False,
 ):
+    avg_timestep = utils.get_average_timestep(dataset_sorted_edges)
     if verbose:
-        print(f"Dataset average time step: {reference_timestep:.2f}")
+        print(f"Dataset average time step: {avg_timestep:.2f}")
 
     # dictionary containing parameter keys and the values that we want to test
     parameter_ranges = {
@@ -62,21 +63,21 @@ def run_runtime_experiment(
         "delta_time": [
             # This value represents delta time value in minutes divided by reference avg time step
             # meaning that it represents the estimated average temporal window size
-            dt / config.reference_avg_time_step
+            dt / reference_timestep
             for dt in range(10, 121, 10)
         ],
     }
     # default values for the parameters
     parameter_defaults = {
         "sorted_edges": len(dataset_sorted_edges),
-        "delta_time": 30 / config.reference_avg_time_step,
+        "delta_time": 30 / reference_timestep,
         "max_path_length": 4,
     }
     # mapper functions that transform parameter values to raw parameter values for algorithm
     # e.g. map sorted edges length to array containing the edges
     parameter_mappers = {
         "sorted_edges": lambda n: dataset_sorted_edges[:n],
-        "delta_time": lambda m: int(m * 60 * reference_timestep),
+        "delta_time": lambda m: int(m * 60 * avg_timestep),
     }
 
     results = []
