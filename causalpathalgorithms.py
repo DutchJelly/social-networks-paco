@@ -2,6 +2,7 @@ from typing import Iterable
 import pathpy1 as pp1
 import pathpy2 as pp2
 import pathpy3 as pp3
+import pathpyG as ppg
 
 
 def PaCo(sorted_edges, delta_time, max_path_length, verbose=False):
@@ -150,3 +151,25 @@ def pathpy3_causal_paths(
     )
 
     return paths
+
+
+def pathpy_g_causal_paths(
+    sorted_edges: Iterable[tuple[str, str, dict]],
+    delta_time: int,
+    max_path_length: int,
+    verbose=False,
+):
+    sorted_edges = [
+        (s, t, int(timestamp_dict["Timestamp"]))
+        for (s, t, timestamp_dict) in sorted_edges
+    ]
+    temporal_network = ppg.TemporalGraph.from_edge_list(sorted_edges)
+    causal_paths = ppg.MultiOrderModel.from_temporal_graph(
+        temporal_network, delta_time, max_order=max_path_length
+    )
+    # ppg.algorithms.lift_order_temporal(temporal_network, delta_time)
+    # e_i = ppg.algorithms.lift_order_temporal(t, delta=1)
+    # dag = ppg.Graph.from_edge_index(e_i)
+    # pp.plot(dag, node_label = [f'{v}-{w}-{time}' for v, w, time in t.temporal_edges]);
+    # return paths
+    return None

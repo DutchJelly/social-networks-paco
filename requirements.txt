@@ -7,3 +7,6 @@ ipykernel # running iypnb files locally
 pathpy2
 unittests
 typed-argument-parser
+numpy
+torch
+torch_geometric

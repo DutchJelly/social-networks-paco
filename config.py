@@ -10,6 +10,7 @@ algorithms = [
     ("PaCo2", causalpathalgorithms.PaCo2),
     ("PathPy", causalpathalgorithms.pathpy_causal_paths),
     ("PathPy2", causalpathalgorithms.pathpy2_causal_paths),
+    ("PathPyG", causalpathalgorithms.pathpy_g_causal_paths),
 ]
 
 # average time step in reality mining dataset, which is used as reference

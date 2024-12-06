@@ -33,6 +33,8 @@ def measure_runtime(
             return end_time - start_time
     except utils.TimeoutException:
         print("experiment took longer than threshold, aborting")
+    except Exception:
+        print("something went wrong with running the algorithm")
     return float("inf")
 
 

@@ -10,10 +10,15 @@ def compare_runtime(
 ):
     results = {}
     for alg_name, alg in algorithms:
-        start_time = time.process_time()
-        alg(**configuration)
-        end_time = time.process_time()
-        results[alg_name] = end_time - start_time
+        try:
+            start_time = time.process_time()
+            alg(**configuration)
+            end_time = time.process_time()
+            results[alg_name] = end_time - start_time
+        except:
+            print("something went wrong..")
+            results[alg_name] = float("inf")
+
         if verbose:
             print(f"Finished with {alg_name}")
     return results
