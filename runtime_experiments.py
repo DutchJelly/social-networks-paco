@@ -13,7 +13,7 @@ class SimpleArgumentParser(Tap):
     experiment: str
     results_dir: str = "results"
     # average time step in reality mining dataset that we use as reference
-    reference_average_timestep: float = 16.704334086681733
+    reference_average_timestep: float = 9.237175690247684  # 16.704334086681733
     # timeout by default after 12 hours
     timeout: int = 12 * 60 * 60
     verbose: bool = False
@@ -49,7 +49,9 @@ def run_runtime_experiment(
 ):
     avg_timestep = utils.get_average_timestep(dataset_sorted_edges)
     if verbose:
-        print(f"Dataset average time step: {avg_timestep:.2f}")
+        print(
+            f"Dataset average time step: {avg_timestep:.2f}, reference time step: {reference_timestep:.2f}"
+        )
 
     # dictionary containing parameter keys and the values that we want to test
     parameter_ranges = {
