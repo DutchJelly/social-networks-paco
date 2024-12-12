@@ -13,7 +13,7 @@ class SimpleArgumentParser(Tap):
     experiment: str
     results_dir: str = "results"
     # average time step in reality mining dataset that we use as reference
-    reference_average_timestep: float = 9.237175690247684  # 16.704334086681733
+    reference_average_timestep: float = 16.704334086681733
     # timeout by default after 12 hours
     timeout: int = 12 * 60 * 60
     verbose: bool = False
