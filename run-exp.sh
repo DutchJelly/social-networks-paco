@@ -1,2 +1,2 @@
-# python runtime_experiments.py --dataset reality-mining --algorithm PaCo --experiment max_path_length --results_dir results3 --verbose;\
-python runtime_experiments.py --dataset reality-mining --algorithm PaCo2 --experiment delta_time --results_dir results4 --verbose;\
+# example of running a delta_time experiment with the PaCo2 algorithm on the reality-mining dataset
+python runtime_experiments.py --dataset reality-mining --algorithm PaCo2 --experiment delta_time --verbose;\
