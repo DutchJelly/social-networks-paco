@@ -1,0 +1,6 @@
+PathPyG,experiment,sorted_edges,delta_time,max_path_length
+45.18809532000001,max_path_length,2172808,30,1
+1750.126755195,max_path_length,2172808,30,2
+inf,sorted_edges,434561,30,4
+inf,sorted_edges,869122,30,4
+inf,delta_time,2172808,20,4
